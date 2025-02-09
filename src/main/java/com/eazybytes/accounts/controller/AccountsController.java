@@ -12,17 +12,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api", produces ={MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "/api", produces ={MediaType.APPLICATION_JSON_VALUE})
 @AllArgsConstructor
 public class AccountsController {
 
     private IAccountService iAccountService;
 
-    @PostMapping("create")
-    public ResponseEntity<ResponseDto> createAccounts(@Valid @RequestBody CustomerDto customerDto) {
+    @PostMapping("/create")
+    public ResponseEntity<ResponseDto> createAccounts(@RequestBody CustomerDto customerDto) {
         iAccountService.createAccount(customerDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(AccountsConstants.STATUS_201, AccountsConstants.MESSAGE_201));
+    }
+
+    @GetMapping("/fetch")
+    public ResponseEntity<CustomerDto> fetchAccountDetails(@RequestParam String mobileNumber) {
+        CustomerDto customerDto = iAccountService.fetchAccountDetails(mobileNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(customerDto);
     }
 }
